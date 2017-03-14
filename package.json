@@ -2,20 +2,28 @@
   "name": "angular1-captcha",
   "version": "0.0.1",
   "description": "BotDetect Captcha generator integration for the AngularJS",
-  "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "grunt"  
+  },
+  "main": "dist/angular1-captcha.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/captcha-com/angular1-captcha.git"
   },
+  "homepage": "https://captcha.com",
   "keywords": [
     "captcha",
-    "angular1",
+    "angular",
+    "angularjs",
     "botdetect"
   ],
   "author": "BotDetect Captcha",
   "bugs": {
-    "url": "https://github.com/captcha-com/angular1-captcha/issues"
+    "url": "http://captcha.com/support"
   },
-  "homepage": "https://github.com/captcha-com/angular1-captcha#readme"
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-uglify": "^2.2.0"
+  },
+  "dependencies": {}
 }
