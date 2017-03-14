@@ -229,7 +229,7 @@
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
       }
       
-			this.captchaStyleName = $rootScope.captchaStyleName;
+      this.captchaStyleName = $rootScope.captchaStyleName;
       this.captchaId = Captcha.getBotDetectInstance().captchaId;
     };
     
