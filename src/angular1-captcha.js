@@ -233,19 +233,19 @@
       this.captchaId = Captcha.getBotDetectInstance().captchaId;
     };
     
-    Captcha.bodetectInstance = null;
+    Captcha.botdetectInstance = null;
     
     Captcha.getBotDetectInstance = function() {
       if (!$rootScope.captchaStyleName) {
         return null;
       }
       
-      if (!Captcha.bodetectInstance
-          || (Captcha.bodetectInstance.captchaStyleName !== $rootScope.captchaStyleName)) {
-        Captcha.bodetectInstance = BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
+      if (!Captcha.botdetectInstance
+          || (Captcha.botdetectInstance.captchaStyleName !== $rootScope.captchaStyleName)) {
+        Captcha.botdetectInstance = BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
       }
       
-      return Captcha.bodetectInstance;
+      return Captcha.botdetectInstance;
     };
     
     Captcha.prototype.validate = function(captchaCode) {
