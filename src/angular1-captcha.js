@@ -155,8 +155,12 @@
           }
         })
           .then(function(response) {
-            // show captcha html
-            element.html(response.data);
+            // remove all botdetect script includes (script include and init script include)
+            // because angular won't execute them in default.
+            var captchaHtmlWithoutScripts = response.data.replace(/<script.*<\/script>/g, '');
+            
+            // show captcha html in view
+            element.html(captchaHtmlWithoutScripts);
 
             // build BotDetect init script include url
             initScriptIncludeUrl = captchaHelper.buildUrl(handlerUrl, {
@@ -167,10 +171,6 @@
 
             // append BotDetect init script to body
             bodyElement.append(captchaHelper.scriptInclude(initScriptIncludeUrl, 'BDC_InitScriptInclude'));
-
-            // remove all botdetect script includes (script include and init script include)
-            // since angular doesn't execute script in default 
-            element.find('script').remove();
           }, function(error) {
             throw new Error(error.data);
           });
