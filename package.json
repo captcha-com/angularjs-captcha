@@ -19,7 +19,7 @@
   ],
   "author": "BotDetect Captcha",
   "bugs": {
-    "url": "http://captcha.com/support"
+    "url": "https://captcha.com/support"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
