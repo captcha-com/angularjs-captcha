@@ -13,8 +13,7 @@
   function captchaSettings() {
     var configuredSettings = {},
         captchaSettings = {
-          baseUrl: '',
-          handlerPath: ''
+          captchaEndpoint: ''
         };
 
     return {
@@ -32,21 +31,9 @@
   /**
    * Strip '/' character from the end of the given url.
    */
-  function captchaBaseUrlFilter() {
+  function captchaEndpointFilter() {
     return function(url) {
       return url.replace(/\/+$/g, '');
-    };
-  }
-  
-  /**
-   * Strip '/' from the beginning and end, 
-   * then add '/' to the beginning of the given path.
-   */
-  function captchaHandlerPathFilter() {
-    return function(path) {
-      var canonical = path.replace(/^\/+|\/+$/g, '');
-          canonical = '/' + canonical;
-        return canonical;
     };
   }
   
@@ -105,11 +92,9 @@
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-        var baseUrl,
-            styleName,
+        var styleName,
             handlerUrl,
             bodyElement,
-            handlerPath,
             scriptIncludeUrl,
             initScriptInclude,
             initScriptIncludeUrl,
@@ -119,12 +104,8 @@
         // save styleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
         $rootScope.captchaStyleName = styleName;
 
-        // normalize base url and handler path
-        baseUrl = $filter('captchaBaseUrlFilter')(captchaHelper.trim(captchaSettings.baseUrl));
-        handlerPath = $filter('captchaHandlerPathFilter')(captchaHelper.trim(captchaSettings.handlerPath));
-
-        // build captcha handler url
-        handlerUrl = baseUrl + handlerPath;
+        // normalize captcha endpoint path
+        handlerUrl = $filter('captchaEndpointFilter')(captchaHelper.trim(captchaSettings.captchaEndpoint));
 
         // build BotDetect client-side script include url
         scriptIncludeUrl = captchaHelper.buildUrl(handlerUrl, {
@@ -279,8 +260,7 @@
       config
     ])
     .provider('captchaSettings', captchaSettings)
-    .filter('captchaBaseUrlFilter', captchaBaseUrlFilter)
-    .filter('captchaHandlerPathFilter', captchaHandlerPathFilter)
+    .filter('captchaEndpointFilter', captchaEndpointFilter)
     .factory('captchaHelper', [
       '$window',
       captchaHelper
