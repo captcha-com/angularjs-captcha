@@ -51,7 +51,7 @@
   }
   
   /**
-   * Captcha helpers that provides useful functions.
+   * Captcha helper that provides useful functions.
    */
   function captchaHelper($window) {
     return {
@@ -158,10 +158,6 @@
             // show captcha html
             element.html(response.data);
 
-            // remove all botdetect script includes (script include and init script include)
-            // since angular doesn't execute script in default 
-            element.find('script').remove();
-
             // build BotDetect init script include url
             initScriptIncludeUrl = captchaHelper.buildUrl(handlerUrl, {
               get: 'init-script-include',
@@ -171,6 +167,10 @@
 
             // append BotDetect init script to body
             bodyElement.append(captchaHelper.scriptInclude(initScriptIncludeUrl, 'BDC_InitScriptInclude'));
+
+            // remove all botdetect script includes (script include and init script include)
+            // since angular doesn't execute script in default 
+            element.find('script').remove();
           }, function(error) {
             throw new Error(error.data);
           });
