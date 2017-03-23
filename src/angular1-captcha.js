@@ -96,8 +96,8 @@
             handlerUrl,
             bodyElement,
             scriptIncludeUrl,
-            initScriptInclude,
-            initScriptIncludeUrl,
+            initScriptIncluded,
+            initScriptIncludeUrl;
 
         styleName = !attrs.stylename ? 'defaultCaptcha' : attrs.stylename;
 
@@ -124,14 +124,14 @@
           },
           beforeSend: function() {
             // append BotDetect client-side script to body once
-            if (0 === $document[0].getElementsByClassName('BDC_ScriptInclude').length) {
+            if ($document[0].getElementsByClassName('BDC_ScriptInclude').length === 0) {
               bodyElement.append(captchaHelper.scriptInclude(scriptIncludeUrl, 'BDC_ScriptInclude'));
             }
 
             // remove included BotDetect init script if it exists
-            initScriptInclude = $document[0].getElementsByClassName('BDC_InitScriptInclude');
-            if (0 !== initScriptInclude.length) {
-              initScriptInclude[0].remove();
+            initScriptIncluded = $document[0].getElementsByClassName('BDC_InitScriptInclude');
+            if (initScriptIncluded.length !== 0) {
+              initScriptIncluded[0].parentNode.removeChild(initScriptIncluded[0]);
             }
           }
         })
@@ -147,7 +147,8 @@
             initScriptIncludeUrl = captchaHelper.buildUrl(handlerUrl, {
               get: 'init-script-include',
               c: styleName,
-              t: element[0].querySelector('#BDC_VCID_' + styleName).value
+              t: element[0].querySelector('#BDC_VCID_' + styleName).value,
+              cs: '200'
             });
 
             // append BotDetect init script to body
