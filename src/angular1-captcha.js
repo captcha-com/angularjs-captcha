@@ -99,7 +99,7 @@
             initScriptIncluded,
             initScriptIncludeUrl;
 
-        styleName = !attrs.stylename ? 'defaultCaptcha' : attrs.stylename;
+        styleName = attrs.stylename ? attrs.stylename : 'defaultCaptcha';
 
         // save styleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
         $rootScope.captchaStyleName = styleName;
