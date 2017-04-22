@@ -1,12 +1,12 @@
 {
-  "name": "angular1-captcha",
+  "name": "angularjs-captcha",
   "version": "0.0.1",
   "homepage": "https://captcha.com",
   "authors": [
     "BotDetect Captcha"
   ],
   "description": "BotDetect Captcha generator integration for the AngularJS",
-  "main": "dist/angular1-captcha.min.js",
+  "main": "dist/angularjs-captcha.min.js",
   "keywords": [
     "captcha",
     "angular",

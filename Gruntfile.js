@@ -10,8 +10,8 @@ module.exports = function(grunt) {
       },
       build: {
         files: [{
-          src: 'src/angular1-captcha.js',
-          dest: 'dist/angular1-captcha.min.js'
+          src: 'src/angularjs-captcha.js',
+          dest: 'dist/angularjs-captcha.min.js'
         }]
       }
     }

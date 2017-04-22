@@ -1,14 +1,14 @@
 {
-  "name": "angular1-captcha",
+  "name": "angularjs-captcha",
   "version": "0.0.1",
   "description": "BotDetect Captcha generator integration for the AngularJS",
   "scripts": {
     "build": "grunt"  
   },
-  "main": "dist/angular1-captcha.min.js",
+  "main": "dist/angularjs-captcha.min.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/captcha-com/angular1-captcha.git"
+    "url": "git+https://github.com/captcha-com/angularjs-captcha.git"
   },
   "homepage": "https://captcha.com",
   "keywords": [
