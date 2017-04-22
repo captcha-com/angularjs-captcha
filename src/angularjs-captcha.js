@@ -219,7 +219,7 @@
       if (!$rootScope.captchaStyleName) {
         return null;
       }
-      return BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);;
+      return BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
     };
     
     Captcha.prototype.validate = function(captchaCode) {
