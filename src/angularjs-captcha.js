@@ -215,19 +215,11 @@
       this.captchaId = Captcha.getBotDetectInstance().captchaId;
     };
     
-    Captcha.botdetectInstance = null;
-    
     Captcha.getBotDetectInstance = function() {
       if (!$rootScope.captchaStyleName) {
         return null;
       }
-      
-      if (!Captcha.botdetectInstance
-          || (Captcha.botdetectInstance.captchaStyleName !== $rootScope.captchaStyleName)) {
-        Captcha.botdetectInstance = BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
-      }
-      
-      return Captcha.botdetectInstance;
+      return BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);;
     };
     
     Captcha.prototype.validate = function(captchaCode) {
