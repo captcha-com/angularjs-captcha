@@ -172,7 +172,7 @@
             captchaCode,
             ngModel = ctrls;
         
-        ngModel.$setValidity('correctCaptcha', false);
+        ngModel.$setValidity('incorrectCaptcha', false);
         
         // client-side validate captcha on blur event
         element.bind('blur', function() {
@@ -190,10 +190,10 @@
             .then(function(isHuman) {
               if (isHuman) {
                 // correct captcha code
-                ngModel.$setValidity('correctCaptcha', true);
+                ngModel.$setValidity('incorrectCaptcha', true);
               } else {
                 // incorrect captcha code
-                ngModel.$setValidity('correctCaptcha', false);
+                ngModel.$setValidity('incorrectCaptcha', false);
                 captcha.reloadImage();
               }
             });
