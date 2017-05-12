@@ -5,7 +5,7 @@
   "authors": [
     "BotDetect Captcha"
   ],
-  "description": "BotDetect Captcha generator integration for the AngularJS",
+  "description": "BotDetect AngularJS Captcha Module",
   "main": "dist/angularjs-captcha.min.js",
   "keywords": [
     "captcha",
