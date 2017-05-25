@@ -1,11 +1,11 @@
 {
   "name": "angularjs-captcha",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://captcha.com/angular-captcha.html#angularjs",
   "authors": [
     "BotDetect Captcha"
   ],
-  "description": "BotDetect AngularJS Captcha Module",
+  "description": "BotDetect Captcha AngularJS Module (JavaScript / Angular 1.x)",
   "main": "dist/angularjs-captcha.min.js",
   "keywords": [
     "captcha",

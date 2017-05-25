@@ -1,1 +1,1 @@
-# BotDetect AngularJS Captcha Module.
+## BotDetect Captcha AngularJS Module (JavaScript / Angular 1.x)
