@@ -2,11 +2,11 @@
 
 (function(angular) {
   'use strict';
-  
+
   function config($httpProvider) {
-    $httpProvider.interceptors.push('captchaHttpInterceptor'); 
+    $httpProvider.interceptors.push('captchaHttpInterceptor');
   }
-  
+
   /**
    * BotDetect Captcha module settings.
    */
@@ -36,7 +36,7 @@
       return url.replace(/\/+$/g, '');
     };
   }
-  
+
   /**
    * Captcha helper that provides useful functions.
    */
@@ -58,7 +58,7 @@
         }
 
         var hasParamsPattern = /\?+/g;
-        return hasParamsPattern.test(url) ? (url + '&' + p.join('&')) : (url + '?' + p.join('&')); 
+        return hasParamsPattern.test(url) ? (url + '&' + p.join('&')) : (url + '?' + p.join('&'));
       },
 
       // create script include element
@@ -70,7 +70,7 @@
       }
     };
   }
-  
+
   /**
    * Register beforeSend() function for Http request.
    */
@@ -84,7 +84,7 @@
       }
     };
   }
-  
+
   /**
    * <botdetect-captcha> directive element, which is used to display Captcha html markup.
    */
@@ -125,7 +125,7 @@
           beforeSend: function() {
             // append BotDetect client-side script to body once
             if ($document[0].getElementsByClassName('BDC_ScriptInclude').length === 0) {
-              bodyElement.append(captchaHelper.scriptInclude(scriptIncludeUrl, 'BDC_ScriptInclude'));
+              angular.element(bodyElement).append(captchaHelper.scriptInclude(scriptIncludeUrl, 'BDC_ScriptInclude'));
             }
 
             // remove included BotDetect init script if it exists
@@ -139,7 +139,7 @@
             // remove all botdetect script includes (script include and init script include)
             // because angular won't execute them in default.
             var captchaHtmlWithoutScripts = response.data.replace(/<script.*<\/script>/g, '');
-            
+
             // show captcha html in view
             element.html(captchaHtmlWithoutScripts);
 
@@ -152,14 +152,14 @@
             });
 
             // append BotDetect init script to body
-            bodyElement.append(captchaHelper.scriptInclude(initScriptIncludeUrl, 'BDC_InitScriptInclude'));
+              angular.element(bodyElement).append(captchaHelper.scriptInclude(initScriptIncludeUrl, 'BDC_InitScriptInclude'));
           }, function(error) {
             throw new Error(error.data);
           });
       }
     };
   }
-  
+
   /**
    * 'correct-captcha' directive attribute, which is used to perform ui captcha validaion.
    */
@@ -171,9 +171,9 @@
         var captcha,
             captchaCode,
             ngModel = ctrls;
-        
+
         ngModel.$setValidity('incorrectCaptcha', false);
-        
+
         // client-side validate captcha on blur event
         element.bind('blur', function() {
           captchaCode = element.val();
@@ -201,7 +201,7 @@
       }
     };
   }
-  
+
   /**
    * Captcha client-side instance exposes Captcha workflow functions and values.
    */
@@ -210,18 +210,18 @@
       if (typeof BotDetect === 'undefined') {
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
       }
-      
+
       this.captchaStyleName = $rootScope.captchaStyleName;
       this.captchaId = Captcha.getBotDetectInstance().captchaId;
     };
-    
+
     Captcha.getBotDetectInstance = function() {
       if (!$rootScope.captchaStyleName) {
         return null;
       }
       return BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
     };
-    
+
     Captcha.prototype.validate = function(captchaCode) {
       var promise = $http({
           method: 'GET',
@@ -238,7 +238,7 @@
 
       return promise;
     };
-    
+
     Captcha.prototype.reloadImage = function() {
       Captcha.getBotDetectInstance().reloadImage();
     };
