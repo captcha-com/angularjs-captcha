@@ -13,8 +13,9 @@
   "homepage": "https://captcha.com/angular-captcha.html#angularjs",
   "keywords": [
     "captcha",
-    "angular",
-    "angularjs",
+    "angular-captcha",
+    "captcha-generator",
+    "angular-module",
     "botdetect"
   ],
   "author": "BotDetect Captcha",

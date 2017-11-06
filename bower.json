@@ -9,8 +9,9 @@
   "main": "dist/angularjs-captcha.min.js",
   "keywords": [
     "captcha",
-    "angular",
-    "angularjs",
+    "angular-captcha",
+    "captcha-generator",
+    "angular-module",
     "botdetect"
   ],
   "ignore": [
