@@ -128,25 +128,24 @@
   // Captcha client-side instance exposes Captcha workflow functions and values.
   function captchaService($rootScope, $http) {
     var Captcha = function() {
-      if (typeof BotDetect === 'undefined') {
+      if (window.botdetect === undefined) {
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
       }
 
       this.captchaStyleName = $rootScope.captchaStyleName;
-      this.captchaId = Captcha.getBotDetectInstance().captchaId;
+      this.captchaId = Captcha.getInstance().captchaId;
     };
 
-    Captcha.getBotDetectInstance = function() {
-      if (!$rootScope.captchaStyleName) {
-        return null;
-      }
-      return BotDetect.getInstanceByStyleName($rootScope.captchaStyleName);
+    Captcha.getInstance = function() {
+      return $rootScope.captchaStyleName
+        ? window.botdetect.getInstanceByStyleName($rootScope.captchaStyleName)
+        : null;
     };
 
     Captcha.prototype.validate = function(captchaCode) {
       var promise = $http({
           method: 'GET',
-          url: Captcha.getBotDetectInstance().validationUrl,
+          url: Captcha.getInstance().validationUrl,
           params: {
             i: captchaCode
           }
@@ -161,7 +160,7 @@
     };
 
     Captcha.prototype.reloadImage = function() {
-      Captcha.getBotDetectInstance().reloadImage();
+      Captcha.getInstance().reloadImage();
     };
 
     return Captcha;
