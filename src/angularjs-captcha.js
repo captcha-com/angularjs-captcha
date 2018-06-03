@@ -35,7 +35,7 @@
           .then(function(response) {
             var f = new Function(response.data); f();
             if (typeof onLoadSuccess === 'function') {
-              onLoadSuccess();
+              setTimeout(onLoadSuccess, 200);
             }
           }, function(error) {
             throw new Error(error.data);
