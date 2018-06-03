@@ -1,7 +1,7 @@
 {
   "name": "angularjs-captcha",
-  "version": "1.3.0",
-  "description": "BotDetect Captcha AngularJS Module (JavaScript / Angular 1.x)",
+  "version": "1.4.0",
+  "description": "BotDetect Captcha AngularJS Module (JavaScript: Angular 1.x)",
   "scripts": {
     "build": "grunt"  
   },
@@ -10,12 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/captcha-com/angularjs-captcha.git"
   },
-  "homepage": "https://captcha.com/angular-captcha.html#angularjs",
+  "homepage": "https://captcha.com/angular-captcha.html#angularjs:1x",
   "keywords": [
     "captcha",
-    "angular-captcha",
+    "angularjs-captcha",
     "captcha-generator",
-    "angular-module",
+    "angularjs-module",
     "botdetect"
   ],
   "author": "BotDetect Captcha",
