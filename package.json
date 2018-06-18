@@ -1,6 +1,6 @@
 {
   "name": "angularjs-captcha",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "BotDetect Captcha AngularJS Module (JavaScript: Angular 1.x)",
   "scripts": {
     "build": "grunt"  
@@ -13,9 +13,9 @@
   "homepage": "https://captcha.com/angular-captcha.html#angularjs:1x",
   "keywords": [
     "captcha",
-    "angularjs-captcha",
-    "captcha-generator",
-    "angularjs-module",
+    "angularjs captcha",
+    "captcha generator",
+    "angularjs captcha module",
     "botdetect"
   ],
   "author": "BotDetect Captcha",
