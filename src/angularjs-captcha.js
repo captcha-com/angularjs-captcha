@@ -35,7 +35,7 @@
           .then(function(response) {
             var f = new Function(response.data); f();
             if (typeof onLoadSuccess === 'function') {
-              setTimeout(onLoadSuccess, 200);
+              onLoadSuccess();
             }
           }, function(error) {
             throw new Error(error.data);
@@ -43,13 +43,9 @@
       },
       
       loadScriptIncludes: function(element) {
-        var scriptIncludeUrl = captchaSettings.captchaEndpoint + '?get=script-include';
-        var self = this;
-        this.getScript(scriptIncludeUrl, function() {
-          var captchaId = element[0].querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
-          var initScriptIncludeUrl = captchaSettings.captchaEndpoint + '?get=init-script-include&c=' + $rootScope.captchaStyleName + '&t=' + captchaId + '&cs=200';
-          self.getScript(initScriptIncludeUrl);
-        });
+        var captchaId = element[0].querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
+        var scriptIncludeUrl = captchaSettings.captchaEndpoint + '?get=script-include&c=' + $rootScope.captchaStyleName + '&t=' + captchaId + '&cs=200';
+        this.getScript(scriptIncludeUrl);
       }
     };
   }

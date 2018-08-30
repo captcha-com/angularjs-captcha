@@ -1,6 +1,6 @@
 {
   "name": "angularjs-captcha",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "BotDetect Captcha AngularJS Module (JavaScript: Angular 1.x)",
   "scripts": {
     "build": "grunt"  
