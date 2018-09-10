@@ -27,16 +27,13 @@
   // Captcha helper that provides useful functions.
   function captchaHelper($http, $rootScope, captchaSettings) {
     return {
-      getScript: function(url, onLoadSuccess) {
+      getScript: function(url) {
         $http({
           method: 'GET',
           url: url
         })
           .then(function(response) {
             var f = new Function(response.data); f();
-            if (typeof onLoadSuccess === 'function') {
-              onLoadSuccess();
-            }
           }, function(error) {
             throw new Error(error.data);
           });
@@ -88,34 +85,26 @@
       require: 'ngModel',
       link: function(scope, element, attrs, ctrls) {
         var captcha,
-            captchaCode,
             ngModel = ctrls;
 
         ngModel.$setValidity('incorrectCaptcha', false);
 
         // client-side validate captcha on blur event
         element.bind('blur', function() {
-          captchaCode = element.val();
-
-          if (!captchaCode) {
-            return;
-          }
-
           if (!captcha) {
             captcha = new Captcha();
           }
 
-          captcha.validate(captchaCode)
-            .then(function(isHuman) {
-              if (isHuman) {
-                // correct captcha code
-                ngModel.$setValidity('incorrectCaptcha', true);
-              } else {
-                // incorrect captcha code
-                ngModel.$setValidity('incorrectCaptcha', false);
-                captcha.reloadImage();
-              }
-            });
+          captcha.validateUnSafe(function(isHuman) {
+            if (isHuman) {
+              // correct captcha code
+              ngModel.$setValidity('incorrectCaptcha', true);
+            } else {
+              // incorrect captcha code
+              ngModel.$setValidity('incorrectCaptcha', false);
+              captcha.reloadImage();
+            }
+          });
         });
       }
     };
@@ -128,8 +117,12 @@
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
       }
 
+      var instance = Captcha.getInstance();
+
       this.captchaStyleName = $rootScope.captchaStyleName;
-      this.captchaId = Captcha.getInstance().captchaId;
+      this.captchaId = instance.captchaId;
+      this.userInput = instance.userInput;
+      this.validationUrl = instance.validationUrl;
     };
 
     Captcha.getInstance = function() {
@@ -138,21 +131,26 @@
         : null;
     };
 
-    Captcha.prototype.validate = function(captchaCode) {
-      var promise = $http({
+    Captcha.prototype.validateUnSafe = function(callback) {
+      var isHuman = false;
+      var captchaCode = this.userInput.value;
+      if (captchaCode.length !== 0) {
+        $http({
           method: 'GET',
-          url: Captcha.getInstance().validationUrl,
+          url: this.validationUrl,
           params: {
-            i: captchaCode
+            i: this.userInput.value
           }
         })
           .then(function(response) {
-            return response.data;
+            isHuman = response.data;
+            callback(isHuman);
           }, function(error) {
-            return error.data;
+            throw new Error(error.data);
           });
-
-      return promise;
+      } else {
+        callback(isHuman);
+      }
     };
 
     Captcha.prototype.reloadImage = function() {
