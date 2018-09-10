@@ -85,12 +85,19 @@
       require: 'ngModel',
       link: function(scope, element, attrs, ctrls) {
         var captcha,
+            captchaCode,
             ngModel = ctrls;
 
         ngModel.$setValidity('incorrectCaptcha', false);
 
         // client-side validate captcha on blur event
         element.bind('blur', function() {
+          captchaCode = element.val();
+
+          if (captchaCode.length === 0) {
+            return;
+          }
+
           if (!captcha) {
             captcha = new Captcha();
           }
