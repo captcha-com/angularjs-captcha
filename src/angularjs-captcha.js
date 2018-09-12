@@ -6,9 +6,7 @@
   // BotDetect Captcha module settings.
   function captchaSettings() {
     var configuredSettings = {},
-        captchaSettings = {
-          captchaEndpoint: ''
-        };
+        captchaSettings = { captchaEndpoint: '' };
 
     return {
       setSettings: function(settings) {
@@ -43,6 +41,32 @@
         var captchaId = element[0].querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
         var scriptIncludeUrl = captchaSettings.captchaEndpoint + '?get=script-include&c=' + $rootScope.captchaStyleName + '&t=' + captchaId + '&cs=200';
         this.getScript(scriptIncludeUrl);
+      },
+
+      useUserInputBlurValidation: function(userInput) {
+        return (userInput.getAttribute('correct-captcha') !== null);
+      },
+
+      validateUnSafe: function(captchaInstance, callback) {
+        var captchaCode = captchaInstance.userInput;
+        if (captchaCode.length !== 0) {
+          $http({
+            method: 'GET',
+            url: captchaInstance.validationUrl,
+            params: {
+              i: captchaCode
+            }
+          })
+            .then(function(response) {
+              var isHuman = response.data;
+              callback(isHuman);
+            }, function(error) {
+              throw new Error(error.data);
+            });
+        } else {
+          var isHuman = false;
+          callback(isHuman);
+        }
       }
     };
   }
@@ -79,7 +103,7 @@
   }
 
   // 'correct-captcha' directive attribute, which is used to perform ui captcha validaion.
-  function correctCaptchaDirective(Captcha) {
+  function correctCaptchaDirective(Captcha, captchaHelper) {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -102,7 +126,7 @@
             captcha = new Captcha();
           }
 
-          captcha.validateUnSafe(function(isHuman) {
+          captchaHelper.validateUnSafe(captcha, function(isHuman) {
             if (isHuman) {
               // correct captcha code
               ngModel.$setValidity('incorrectCaptcha', true);
@@ -118,7 +142,7 @@
   }
 
   // Captcha client-side instance exposes Captcha workflow functions and values.
-  function captchaService($rootScope, $http) {
+  function captchaService($rootScope, $http, captchaHelper) {
     var Captcha = function() {
       if (window.botdetect === undefined) {
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
@@ -139,25 +163,13 @@
     };
 
     Captcha.prototype.validateUnSafe = function(callback) {
-      var isHuman = false;
-      var captchaCode = this.userInput.value;
-      if (captchaCode.length !== 0) {
-        $http({
-          method: 'GET',
-          url: this.validationUrl,
-          params: {
-            i: this.userInput.value
-          }
-        })
-          .then(function(response) {
-            isHuman = response.data;
-            callback(isHuman);
-          }, function(error) {
-            throw new Error(error.data);
-          });
-      } else {
+      var self = this;
+      captchaHelper.validateUnSafe(this, function(isHuman) {
         callback(isHuman);
-      }
+        if (!captchaHelper.useUserInputBlurValidation(self.userInput) && !isHuman) {
+          self.reloadImage();
+        }
+      });
     };
 
     Captcha.prototype.reloadImage = function() {
@@ -179,6 +191,7 @@
     .factory('Captcha', [
       '$rootScope',
       '$http',
+      'captchaHelper',
       captchaService
     ])
     .directive('botdetectCaptcha', [
@@ -190,6 +203,7 @@
     ])
     .directive('correctCaptcha', [
       'Captcha',
+      'captchaHelper',
       correctCaptchaDirective
     ]);
 
