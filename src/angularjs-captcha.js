@@ -187,7 +187,7 @@
       Captcha.getInstance().reloadImage();
     };
 
-    Captcha.generate = function(styleName) {
+    Captcha.generateCaptchaMarkup = function(styleName) {
       // save styleName in $rootScope, it will be used in Captcha service for getting BotDetect instance
       $rootScope.captchaStyleName = styleName;
 
