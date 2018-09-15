@@ -50,7 +50,7 @@
         return (userInput.getAttribute('correct-captcha') !== null);
       },
 
-      validateUnSafe: function(captchaInstance, callback) {
+      validateUnsafe: function(captchaInstance, callback) {
         var captchaCode = captchaInstance.userInput;
         if (captchaCode.length !== 0) {
           $http({
@@ -137,7 +137,7 @@
 
           captcha = new Captcha();
 
-          captchaHelper.validateUnSafe(captcha, function(isHuman) {
+          captchaHelper.validateUnsafe(captcha, function(isHuman) {
             if (isHuman) {
               // correct captcha code
               ngModel.$setValidity('incorrectCaptcha', true);
@@ -173,9 +173,9 @@
         : null;
     };
 
-    Captcha.prototype.validateUnSafe = function(callback) {
+    Captcha.prototype.validateUnsafe = function(callback) {
       var self = this;
-      captchaHelper.validateUnSafe(this, function(isHuman) {
+      captchaHelper.validateUnsafe(this, function(isHuman) {
         callback(isHuman);
         if (!captchaHelper.useUserInputBlurValidation(self.userInput) && !isHuman) {
           self.reloadImage();
