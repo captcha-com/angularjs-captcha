@@ -95,7 +95,6 @@
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-
         if (!captchaSettings.generateCaptcha) {
           return;
         }
@@ -189,6 +188,7 @@
     };
 
     Captcha.generate = function(styleName) {
+      // save styleName in $rootScope, it will be used in Captcha service for getting BotDetect instance
       $rootScope.captchaStyleName = styleName;
 
       captchaHelper.getHtml(styleName, function(captchaHtml) {
