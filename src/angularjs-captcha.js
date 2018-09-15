@@ -6,7 +6,10 @@
   // BotDetect Captcha module settings.
   function captchaSettings() {
     var configuredSettings = {},
-        captchaSettings = { captchaEndpoint: '' };
+        captchaSettings = { 
+          captchaEndpoint: '',
+          generateCaptcha: true
+        };
 
     return {
       setSettings: function(settings) {
@@ -38,7 +41,7 @@
       },
       
       loadScriptIncludes: function(element) {
-        var captchaId = element[0].querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
+        var captchaId = element.querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
         var scriptIncludeUrl = captchaSettings.captchaEndpoint + '?get=script-include&c=' + $rootScope.captchaStyleName + '&t=' + captchaId + '&cs=200';
         this.getScript(scriptIncludeUrl);
       },
@@ -54,7 +57,7 @@
             method: 'GET',
             url: captchaInstance.validationUrl,
             params: {
-              i: captchaCode
+              i: captchaCode.value
             }
           })
             .then(function(response) {
@@ -67,20 +70,9 @@
           var isHuman = false;
           callback(isHuman);
         }
-      }
-    };
-  }
-  
-  // <botdetect-captcha> directive element, which is used to display Captcha html markup.
-  function botdetectCaptchaDirective($rootScope, $http, captchaSettings, captchaHelper) {
-    return {
-      restrict: 'E',
-      link: function(scope, element, attrs) {
-        var styleName = attrs.stylename ? attrs.stylename : 'defaultCaptcha';
+      },
 
-        // save styleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
-        $rootScope.captchaStyleName = styleName;
-
+      getHtml: function(styleName, callback) {
         $http({
           method: 'GET',
           url: captchaSettings.captchaEndpoint,
@@ -90,14 +82,36 @@
           }
         })
           .then(function(response) {
-            // show captcha html in view
-            element.html(response.data.replace(/<script.*<\/script>/g, ''));
-            
-            // load botdetect scripts
-            captchaHelper.loadScriptIncludes(element);
+            callback(response.data.replace(/<script.*<\/script>/g, ''));
           }, function(error) {
             throw new Error(error.data);
           });
+      }
+    };
+  }
+  
+  // <botdetect-captcha> directive element, which is used to display Captcha html markup.
+  function botdetectCaptchaDirective($rootScope, captchaSettings, captchaHelper) {
+    return {
+      restrict: 'E',
+      link: function(scope, element, attrs) {
+
+        if (!captchaSettings.generateCaptcha) {
+          return;
+        }
+
+        var styleName = attrs.stylename ? attrs.stylename : 'defaultCaptcha';
+
+        // save styleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
+        $rootScope.captchaStyleName = styleName;
+
+        captchaHelper.getHtml(styleName, function(captchaHtml) {
+          // show captcha html in view
+          element.html(captchaHtml);
+
+          // load botdetect scripts
+          captchaHelper.loadScriptIncludes(element[0]);
+        });
       }
     };
   }
@@ -122,9 +136,7 @@
             return;
           }
 
-          if (!captcha) {
-            captcha = new Captcha();
-          }
+          captcha = new Captcha();
 
           captchaHelper.validateUnSafe(captcha, function(isHuman) {
             if (isHuman) {
@@ -142,7 +154,7 @@
   }
 
   // Captcha client-side instance exposes Captcha workflow functions and values.
-  function captchaService($rootScope, $http, captchaHelper) {
+  function captchaService($document, $rootScope, captchaHelper) {
     var Captcha = function() {
       if (window.botdetect === undefined) {
         throw new Error('Can not create Captcha instance, please put "new Captcha()" inside function that will be invoked after form is submitted.');
@@ -176,6 +188,23 @@
       Captcha.getInstance().reloadImage();
     };
 
+    Captcha.generate = function(styleName) {
+      $rootScope.captchaStyleName = styleName;
+
+      captchaHelper.getHtml(styleName, function(captchaHtml) {
+        var placeholder = $document[0].getElementsByTagName('botdetect-captcha');
+        if (placeholder.length !== 0) {
+          // show captcha html in view
+          placeholder[0].innerHTML = captchaHtml;
+          
+          // load botdetect scripts
+          captchaHelper.loadScriptIncludes(placeholder[0]);
+        } else {
+          throw new Error('<botdetect-captcha> directive element could not be found.');
+        }
+      });
+    };
+
     return Captcha;
   }
 
@@ -189,14 +218,13 @@
       captchaHelper
     ])
     .factory('Captcha', [
+      '$document',
       '$rootScope',
-      '$http',
       'captchaHelper',
       captchaService
     ])
     .directive('botdetectCaptcha', [
       '$rootScope',
-      '$http',
       'captchaSettings',
       'captchaHelper',
       botdetectCaptchaDirective
