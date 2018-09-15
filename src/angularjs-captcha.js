@@ -8,7 +8,7 @@
     var configuredSettings = {},
         captchaSettings = { 
           captchaEndpoint: '',
-          generateCaptcha: true
+          captchaEnabled: true
         };
 
     return {
@@ -95,7 +95,7 @@
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-        if (!captchaSettings.generateCaptcha) {
+        if (!captchaSettings.captchaEnabled) {
           return;
         }
 
