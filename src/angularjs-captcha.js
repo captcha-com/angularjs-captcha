@@ -99,12 +99,28 @@
           return;
         }
 
-        var styleName = attrs.stylename ? attrs.stylename : 'defaultCaptcha';
+        var captchaStyleName = (function() {
+          var styleName;
 
-        // save styleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
-        $rootScope.captchaStyleName = styleName;
+          styleName = attrs.captchastylename;
+          if (styleName) {
+            return styleName;
+          }
 
-        captchaHelper.getHtml(styleName, function(captchaHtml) {
+          // backward compatibility
+          styleName = attrs.stylename;
+          if (styleName) {
+            return styleName;
+          }
+
+          styleName = 'defaultCaptcha';
+          return styleName;
+        })();
+        
+        // save captchaStyleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
+        $rootScope.captchaStyleName = captchaStyleName;
+
+        captchaHelper.getHtml(captchaStyleName, function(captchaHtml) {
           // show captcha html in view
           element.html(captchaHtml);
 
@@ -187,11 +203,11 @@
       Captcha.getInstance().reloadImage();
     };
 
-    Captcha.generateCaptchaMarkup = function(styleName) {
-      // save styleName in $rootScope, it will be used in Captcha service for getting BotDetect instance
-      $rootScope.captchaStyleName = styleName;
+    Captcha.generateCaptchaMarkup = function(captchaStyleName) {
+      // save captchaStyleName in $rootScope, it will be used in Captcha service for getting BotDetect instance
+      $rootScope.captchaStyleName = captchaStyleName;
 
-      captchaHelper.getHtml(styleName, function(captchaHtml) {
+      captchaHelper.getHtml(captchaStyleName, function(captchaHtml) {
         var placeholder = $document[0].getElementsByTagName('botdetect-captcha');
         if (placeholder.length !== 0) {
           // show captcha html in view
