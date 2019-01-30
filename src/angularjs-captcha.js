@@ -189,6 +189,14 @@
         : null;
     };
 
+    Captcha.prototype.getCaptchaId = function() {
+      return this.captchaId;
+    };
+
+    Captcha.prototype.getUserEnteredCaptchaCode = function() {
+      return this.userInput.value;
+    };
+
     Captcha.prototype.validateUnsafe = function(callback) {
       var self = this;
       captchaHelper.validateUnsafe(this, function(isHuman) {
