@@ -113,8 +113,7 @@
             return styleName;
           }
 
-          styleName = 'defaultCaptcha';
-          return styleName;
+          throw new Error('The captchaStyleName attribute is not found or its value is not set.');
         })();
         
         // save captchaStyleName in $rootScope, that will be used in correctCaptcha directive and Captcha service for getting BotDetect instance
