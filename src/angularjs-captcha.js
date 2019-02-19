@@ -39,6 +39,41 @@
             throw new Error(error.data);
           });
       },
+
+      // get captcha endpoint handler from configued captchaEndpoint value,
+      // the result can be "simple-captcha-endpoint.ashx", "botdetectcaptcha",
+      // or "simple-botdetect.php"
+      getCaptchaEndpointHandler: function() {
+        var splited = captchaSettings.captchaEndpoint.split('/');
+        return splited[splited.length - 1];
+      },
+
+      // get backend base url from configued captchaEndpoint value
+      getBackendBaseUrl: function(captchaEndpointHandler) {
+        var lastIndex = captchaSettings.captchaEndpoint.lastIndexOf(captchaEndpointHandler);
+        return captchaSettings.captchaEndpoint.substring(0, lastIndex);
+      },
+
+      // change relative to absolute urls in captcha html markup
+      changeRelativeToAbsoluteUrls: function(originCaptchaHtml) {
+        var captchaEndpointHandler = this.getCaptchaEndpointHandler();
+        var backendUrl = this.getBackendBaseUrl(captchaEndpointHandler);
+
+        originCaptchaHtml = originCaptchaHtml.replace(/<script.*<\/script>/g, '');
+        var relativeUrls = originCaptchaHtml.match(/(src|href)=\"([^"]+)\"/g);
+        
+        var relativeUrl, relativeUrlPrefixPattern, absoluteUrl,
+            changedCaptchaHtml = originCaptchaHtml;
+
+        for (var i = 0; i < relativeUrls.length; i++) {
+          relativeUrl = relativeUrls[i].slice(0, -1).replace(/src=\"|href=\"/, '');
+          relativeUrlPrefixPattern = new RegExp(".*" + captchaEndpointHandler);
+          absoluteUrl = relativeUrl.replace(relativeUrlPrefixPattern, backendUrl + captchaEndpointHandler);
+          changedCaptchaHtml = changedCaptchaHtml.replace(relativeUrl, absoluteUrl);
+        }
+
+        return changedCaptchaHtml;
+      },
       
       loadScriptIncludes: function(element) {
         var captchaId = element.querySelector('#BDC_VCID_' + $rootScope.captchaStyleName).value;
@@ -82,7 +117,8 @@
           }
         })
           .then(function(response) {
-            callback(response.data.replace(/<script.*<\/script>/g, ''));
+            var captchaHtml = response.data;
+            callback(captchaHtml);
           }, function(error) {
             throw new Error(error.data);
           });
@@ -121,6 +157,7 @@
 
         captchaHelper.getHtml(captchaStyleName, function(captchaHtml) {
           // show captcha html in view
+          captchaHtml = captchaHelper.changeRelativeToAbsoluteUrls(captchaHtml);
           element.html(captchaHtml);
 
           // load botdetect scripts
